@@ -1,0 +1,409 @@
+!DOCTYPE html
+html lang=vi
+head
+    meta charset=UTF-8
+    meta name=viewport content=width=device-width, initial-scale=1.0
+    titleTranVy  Cosmic Vision 🌌title
+    script src=httpscdn.tailwindcss.comscript
+    script src=httpscdnjs.cloudflare.comajaxlibsthree.jsr128three.min.jsscript
+    link rel=stylesheet href=httpscdnjs.cloudflare.comajaxlibsfont-awesome6.4.0cssall.min.css
+    style
+        @import url('httpsfonts.googleapis.comcss2family=Plus+Jakarta+Sanswght@200;400;600;800&family=Space+Groteskwght@300;500;700&display=swap');
+
+        root {
+            --accent #d8b4fe;
+            --glass rgba(30, 10, 50, 0.45);
+            --border rgba(168, 85, 247, 0.2);
+            --bg-deep #0f0720;
+        }
+
+        body, html {
+            margin 0;
+            padding 0;
+            width 100%;
+            background-color var(--bg-deep);
+            color #ffffff;
+            font-family 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior smooth;
+            overflow-x hidden;
+        }
+
+         Splash Welcome Screen 
+        #splash-screen {
+            position fixed;
+            inset 0;
+            z-index 10000;
+            background #0f0720;
+            display flex;
+            flex-direction column;
+            justify-content center;
+            align-items center;
+            transition opacity 1s ease-out, visibility 1s;
+        }
+
+        .splash-content {
+            text-align center;
+        }
+
+        .loading-bar-container {
+            width 200px;
+            height 2px;
+            background rgba(255,255,255,0.1);
+            margin-top 20px;
+            position relative;
+            overflow hidden;
+            border-radius 10px;
+        }
+
+        .loading-bar-progress {
+            position absolute;
+            left -100%;
+            width 100%;
+            height 100%;
+            background var(--accent);
+            animation loading 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes loading {
+            0% { left -100%; }
+            50% { left -30%; }
+            100% { left 100%; }
+        }
+
+        .fade-in-text {
+            animation fadeInUp 1s ease-out forwards;
+            opacity 0;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity 0; transform translateY(20px); }
+            to { opacity 1; transform translateY(0); }
+        }
+
+         Fixed Background Canvas 
+        #canvas-container {
+            position fixed;
+            top 0; left 0;
+            width 100%; height 100vh;
+            z-index 1;
+        }
+
+         Full page scrolling sections 
+        .section {
+            position relative;
+            z-index 10;
+            min-height 100vh;
+            display flex;
+            flex-direction column;
+            justify-content center;
+            align-items center;
+            padding 2rem;
+            pointer-events none;
+        }
+
+        .pointer-events-auto { pointer-events auto; }
+
+        .glass-panel {
+            background var(--glass);
+            backdrop-filter blur(30px) saturate(150%);
+            -webkit-backdrop-filter blur(30px) saturate(150%);
+            border 1px solid var(--border);
+            border-radius 48px;
+            box-shadow 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+            padding 3.5rem;
+            width 100%;
+            max-width 750px;
+            transition all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            text-align center;
+        }
+
+        .gradient-text {
+            background linear-gradient(135deg, #ffffff 0%, #d8b4fe 50%, #a855f7 100%);
+            -webkit-background-clip text;
+            -webkit-text-fill-color transparent;
+            font-family 'Space Grotesk', sans-serif;
+        }
+
+        .btn-nova {
+            background linear-gradient(135deg, #ffffff, #f3e8ff);
+            color #581c87;
+            padding 18px 45px;
+            border-radius 100px;
+            font-weight 800;
+            letter-spacing 2px;
+            text-transform uppercase;
+            transition all 0.4s ease;
+            box-shadow 0 0 30px rgba(168, 85, 247, 0.3);
+            cursor pointer;
+            margin-top 2rem;
+        }
+
+        .btn-novahover {
+            transform scale(1.05);
+            box-shadow 0 0 50px rgba(168, 85, 247, 0.6);
+        }
+
+         Email Modal 
+        #email-modal {
+            position fixed;
+            top 50%; left 50%;
+            transform translate(-50%, -50%) scale(0.5);
+            z-index 1000;
+            opacity 0;
+            pointer-events none;
+            transition all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background rgba(168, 85, 247, 0.15);
+            border 2px solid var(--accent);
+            padding 20px 40px;
+            border-radius 20px;
+            backdrop-filter blur(20px);
+        }
+
+        #email-modal.active {
+            opacity 1;
+            transform translate(-50%, -50%) scale(1);
+            pointer-events auto;
+        }
+
+        .avatar-frame {
+            position relative;
+            width 140px; height 140px;
+            margin-bottom 2rem;
+            display inline-block;
+        }
+        .avatar-img {
+            width 100%; height 100%;
+            border-radius 50%;
+            object-fit cover;
+            border 2px solid var(--accent);
+            padding 5px;
+        }
+
+         Scroll Indicator 
+        .scroll-indicator {
+            position absolute;
+            bottom 30px;
+            display flex;
+            flex-direction column;
+            align-items center;
+            gap 10px;
+            animation bounce 2s infinite;
+            opacity 0.6;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform translateY(0);}
+            40% {transform translateY(-10px);}
+            60% {transform translateY(-5px);}
+        }
+
+        .social-dock {
+            position fixed;
+            bottom 40px;
+            right 40px;
+            display flex;
+            flex-direction column;
+            gap 15px;
+            z-index 100;
+        }
+        .social-btn {
+            width 50px; height 50px;
+            display flex; align-items center; justify-content center;
+            background rgba(88, 28, 135, 0.2);
+            border 1px solid var(--border);
+            border-radius 15px;
+            backdrop-filter blur(15px);
+            transition all 0.3s ease;
+            color #d8b4fe;
+        }
+        .social-btnhover { background #a855f7; color white; transform scale(1.1); }
+    style
+head
+body
+
+    !-- Màn hình chào mừng (Splash Screen) --
+    div id=splash-screen
+        div class=splash-content
+            h1 class=text-5xl font-bold tracking-[0.4em] gradient-text fade-in-text uppercaseTranVyh1
+            p class=text-[10px] tracking-[0.7em] text-white40 uppercase mt-4 fade-in-text style=animation-delay 0.2sKhởi tạo không gian sốp
+            div class=loading-bar-container mx-auto fade-in-text style=animation-delay 0.4s
+                div class=loading-bar-progressdiv
+            div
+        div
+    div
+
+    div id=canvas-containerdiv
+
+    !-- Email Reveal Modal --
+    div id=email-modal class=text-center
+        p class=text-xs uppercase tracking-[0.4em] text-purple-300 mb-2email của t nhép
+        h2 class=text-2xl font-bold font-mono text-white select-alltranquocanhvy@gmail.comh2
+        button onclick=closeEmail() class=mt-4 text-[10px] text-white50 hovertext-white uppercase tracking-widestĐóngbutton
+    div
+
+    main id=main-content style=opacity 0;
+        !-- Home Section --
+        section class=section
+            div id=main-panel class=glass-panel pointer-events-auto
+                div class=avatar-frame
+                    img src=httpsscontent.fhan15-1.fna.fbcdn.netvt39.30808-6602351839_122162512520745859_419513426744476516_n.jpgstp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=9j2YpAy3HHcQ7kNvwFf1LqM&_nc_oc=AdngdAuSr1fe2JM2LWLIAQdBtWOEdFvFppS5Eoh_eQxVXIvBe6CGW4mDGIjN3WfJNe6MkqwElbxjwgeg106tMBBO&_nc_zt=23&_nc_ht=scontent.fhan15-1.fna&_nc_gid=7jbxQPLaXV8ZZEUjwcW5nA&oh=00_AfpGwdjhOPlu1stRSQHgPUMQ8K7kUZzvJy7NAJZRus2cAA&oe=6963B449 alt=TranVy class=avatar-img
+                div
+                
+                h1 class=text-6xl mdtext-8xl font-extrabold gradient-text tracking-tighter mb-2TranVyh1
+                p class=font-mono text-xs tracking-[0.6em] text-purple-30050 uppercase mb-8Architect of Purple Realmsp
+                
+                p class=text-lg text-white80 leading-relaxed mb-6
+                    Chào người trước màn hình nhé t biết bn rất đẹp và xinh nên là bn cho t 500k nhaaa cho t là điều m sẽ ko bao giờ lỗ đâu =))).
+                p
+
+                button onclick=supernovaEffect() class=btn-nova
+                    Kích Hoạt Siêu Tân Tinh
+                button
+            div
+            div class=scroll-indicator
+                span class=text-[10px] uppercase tracking-widestVuốt xuốngspan
+                i class=fas fa-chevron-downi
+            div
+        section
+
+        !-- About Section --
+        section class=section
+            div class=glass-panel pointer-events-auto
+                h2 class=text-4xl font-bold gradient-text mb-8Này tạo cho vui thôi mấy fen =))h2
+                div class=grid grid-cols-2 gap-8
+                    div class=text-left p-6 border-l-2 border-purple-50030
+                        h3 class=text-xl font-bold mb-2 text-purple-300Thiết Kếh3
+                        p class=text-sm text-white60Kiến tạo những giao diện mang hơi thở tương lai và trải nghiệm người dùng tối thượng.p
+                    div
+                    div class=text-left p-6 border-l-2 border-purple-50030
+                        h3 class=text-xl font-bold mb-2 text-purple-300DONATEh3
+                        p class=text-sm text-white60donate cho taoooo.p
+                    div
+                div
+            div
+        section
+
+        !-- Final Section --
+        section class=section
+            div class=glass-panel pointer-events-auto
+                h2 class=text-4xl font-bold gradient-text mb-6Sẵn Sàng Bayh2
+                p class=text-white70 mb-10nhắn với t nếu bn buồn.p
+                div class=flex justify-center gap-6
+                    a href=httpswww.facebook.comsucvattranv target=_blank class=bg-white10 hoverbg-white20 px-8 py-3 rounded-full transition border border-white20ib tớ trên phở bò nhéa
+                div
+            div
+        section
+    main
+
+    div class=social-dock pointer-events-auto
+        a href=httpswww.facebook.comsucvattranv target=_blank class=social-btni class=fab fa-facebook-fia
+        a href=httpsgithub.comstiallach5t target=_blank class=social-btni class=fab fa-githubia
+        a href=httpswww.instagram.comemyeuanhjack2cu target=_blank class=social-btni class=fab fa-instagramia
+    div
+
+    script
+        let scene, camera, renderer, sun, particles, starField;
+        const container = document.getElementById('canvas-container');
+
+         Hàm ẩn Splash Screen
+        function hideSplashScreen() {
+            const splash = document.getElementById('splash-screen');
+            const main = document.getElementById('main-content');
+            
+            splash.style.opacity = '0';
+            setTimeout(() = {
+                splash.style.visibility = 'hidden';
+                main.style.transition = 'opacity 1.5s ease-in';
+                main.style.opacity = '1';
+            }, 1000);
+        }
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(65, window.innerWidth  window.innerHeight, 0.1, 2000);
+            renderer = new THREE.WebGLRenderer({ antialias true, alpha true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            scene.add(new THREE.AmbientLight(0xa855f7, 0.4));
+            const sunLight = new THREE.PointLight(0xffffff, 2.5, 300);
+            scene.add(sunLight);
+
+             Sun
+            sun = new THREE.Mesh(new THREE.SphereGeometry(4, 64, 64), new THREE.MeshBasicMaterial({ color 0xffffff }));
+            scene.add(sun);
+
+             Stars Background
+            const starCount = 5000;
+            const starGeo = new THREE.BufferGeometry();
+            const starPos = new Float32Array(starCount  3);
+            for(let i=0; istarCount3; i++) starPos[i] = (Math.random() - 0.5)  1500;
+            starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+            starField = new THREE.Points(starGeo, new THREE.PointsMaterial({ color 0xffffff, size 0.7 }));
+            scene.add(starField);
+
+             Explosion Particles
+            const particleCount = 2000;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(particleCount  3);
+            const vel = new Float32Array(particleCount  3);
+            for(let i=0; iparticleCount3; i++) { pos[i] = 0; vel[i] = (Math.random() - 0.5)  2.5; }
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            particles = new THREE.Points(geo, new THREE.PointsMaterial({ color 0xd8b4fe, size 0.15, transparent true, opacity 0 }));
+            scene.add(particles);
+
+            camera.position.set(0, 0, 60);
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                sun.rotation.y += 0.005;
+                starField.rotation.y += 0.0002;
+                
+                const scrollY = window.scrollY;
+                camera.position.z = 60 + (scrollY  0.15);
+                camera.rotation.y = (scrollY  0.0005);
+                
+                if(particles.material.opacity  0) {
+                    const positions = particles.geometry.attributes.position.array;
+                    for(let i=0; iparticleCount3; i++) positions[i] += vel[i];
+                    particles.geometry.attributes.position.needsUpdate = true;
+                    particles.material.opacity -= 0.005;
+                }
+
+                renderer.render(scene, camera);
+            }
+            animate();
+            
+             Tự động ẩn splash screen sau 2.8 giây
+            setTimeout(hideSplashScreen, 2800);
+        }
+
+        function supernovaEffect() {
+            document.getElementById('main-panel').style.opacity = '0';
+            const positions = particles.geometry.attributes.position.array;
+            for(let i=0; ipositions.length; i++) positions[i] = 0;
+            particles.material.opacity = 1;
+            particles.geometry.attributes.position.needsUpdate = true;
+            sun.scale.set(12, 12, 12);
+            setTimeout(() = {
+                sun.scale.set(0, 0, 0);
+                document.getElementById('email-modal').classList.add('active');
+            }, 200);
+        }
+
+        function closeEmail() {
+            document.getElementById('email-modal').classList.remove('active');
+            setTimeout(() = {
+                sun.scale.set(1, 1, 1);
+                document.getElementById('main-panel').style.opacity = '1';
+            }, 500);
+        }
+
+        window.onload = init;
+        window.addEventListener('resize', () = {
+            camera.aspect = window.innerWidth  window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    script
+body
+html
